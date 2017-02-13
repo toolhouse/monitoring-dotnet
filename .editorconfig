@@ -9,17 +9,19 @@ indent_style = space
 indent_size = 4
 insert_final_newline = true
 
+# Mark file types called out in .gitattributes for CRLF line endings
+[*.{bat,cmd,csproj}]
+end_of_line = crlf
+
 # Match Visual Studio native formatting for project + solution files.
 # This allows manual editing in a text editor without blowing up diffs.
 [*.csproj]
 charset = utf-8-bom
-end_of_line = crlf
 indent_style = space
 indent_size = 2
 insert_final_newline = false
 
 [*.sln]
 charset = utf-8-bom
-end_of_line = crlf
 indent_size = 4
 indent_style = tab
