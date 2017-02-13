@@ -6,3 +6,10 @@
 *.cmd text eol=crlf
 *.csproj text eol=crlf
 *.sln text eol=crlf
+
+# Explicitly mark certain filetypes as binary
+*.gif binary
+*.jpeg binary
+*.jpg binary
+*.pdf binary
+*.png binary

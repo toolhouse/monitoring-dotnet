@@ -9,7 +9,8 @@ indent_style = space
 indent_size = 4
 insert_final_newline = true
 
-# Match Visual Studio native formatting for project + solution files
+# Match Visual Studio native formatting for project + solution files.
+# This allows manual editing in a text editor without blowing up diffs.
 [*.csproj]
 charset = utf-8-bom
 end_of_line = crlf
