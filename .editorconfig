@@ -8,3 +8,17 @@ end_of_line = lf
 indent_style = space
 indent_size = 4
 insert_final_newline = true
+
+# Match Visual Studio native formatting for project + solution files
+[*.csproj]
+charset = utf-8-bom
+end_of_line = crlf
+indent_style = space
+indent_size = 2
+insert_final_newline = false
+
+[*.sln]
+charset = utf-8-bom
+end_of_line = crlf
+indent_size = 4
+indent_style = tab
