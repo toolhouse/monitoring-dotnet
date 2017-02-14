@@ -1,21 +1,26 @@
 # EditorConfig is awesome: http://EditorConfig.org
 
+# Note: Please don't specify line endings in here unless the line endings are
+# *also* specified in the .gitattributes file.
+
 root = true
 
 [*]
 charset = utf-8
-end_of_line = lf
 indent_style = space
 indent_size = 4
 insert_final_newline = true
+trim_trailing_whitespace = true
 
-# Mark file types called out in .gitattributes for CRLF line endings
-[*.{bat,cmd,csproj}]
+# Ensure Windows files that *must* have CRLF endings always get them. These
+# extensions should also be marked to be checked out with CRLF in the
+# .gitattributes file.
+[*.{bat,cmd}]
 end_of_line = crlf
 
-# Match Visual Studio native formatting for project + solution files.
-# This allows manual editing in a text editor without blowing up diffs.
-[*.csproj]
+# Match Visual Studio formatting for certain file types. This allows editing
+# outside VS in a text editor without blowing up diffs.
+[{*.csproj,packages.config}]
 charset = utf-8-bom
 indent_style = space
 indent_size = 2

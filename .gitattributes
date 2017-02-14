@@ -1,15 +1,34 @@
-# Set the default behavior, in case people don't have core.autocrlf set.
+# `.gitattributes` files override the `core.autocrlf` setting and move decisions
+# about line endings out of global config and into the repository itself.
+
+################################################################################
+# Check out all files with line endings set according to the `core.eol` setting
+# (defaults to CRLF on Windows, LF on Mac).
+################################################################################
 * text=auto
 
-# Declare files that will always have CRLF line endings on checkout.
+################################################################################
+# Mark some files as always to be checked out with CRLF line endings. This is to
+# prevent breaking things when moving files between platforms outside git (i.e.
+# via FTP). If you add an extension to this list you MUST ALSO add it to
+# the .editorconfig file.
+################################################################################
 *.bat text eol=crlf
 *.cmd text eol=crlf
-*.csproj text eol=crlf
-*.sln text eol=crlf
 
-# Explicitly mark certain filetypes as binary
+################################################################################
+# Explicitly mark certain filetypes as binary.
+# This is not strictly required--git will use its own heuristics to detect
+# binary files. However we can avoid edge cases by doing explicit listing here.
+################################################################################
+*.eot binary
 *.gif binary
+*.ico binary
 *.jpeg binary
 *.jpg binary
+*.mp3 binary
+*.mp4 binary
 *.pdf binary
 *.png binary
+*.ttf binary
+*.woff binary
