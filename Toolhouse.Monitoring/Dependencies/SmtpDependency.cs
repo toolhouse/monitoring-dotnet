@@ -24,7 +24,7 @@ namespace Toolhouse.Monitoring.Dependencies
             // TODO: A more sophisticated test here would be opening up a socket and actually attempting to speak SMTP.
             using (var client = new System.Net.Mail.SmtpClient())
             {
-                var message = new MailMessage("test@example.org", "smtpdependencycheck@toolhouse.com", "SMTP test", "");
+                var message = new MailMessage("test@example.org", "smtpdependencycheck@example.org", "SMTP test", "");
                 client.Send(message);
             }
 
