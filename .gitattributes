@@ -1,9 +1,5 @@
 # `.gitattributes` files override the `core.autocrlf` setting and move decisions
 # about line endings out of global config and into the repository itself.
-#
-# See the Github guide for details about how to work with this file:
-#
-#   https://help.github.com/articles/dealing-with-line-endings/
 
 ################################################################################
 # Check out all files with line endings set according to the `core.eol` setting
