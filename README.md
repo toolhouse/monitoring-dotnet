@@ -1,5 +1,7 @@
 # Toolhouse Monitoring
 
+[![NuGet](https://img.shields.io/nuget/v/Toolhouse.Monitoring.svg)]()
+
 This library adds logging and monitoring capabilities to ASP.net websites. It provides:
 
 - A [simple healthcheck endpoint](./docs/healthcheck.md).
