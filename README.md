@@ -53,3 +53,19 @@ RouteTable.Routes.IgnoreRoute("readiness");
 To request a new feature or report a bug [open an issue in Github](https://github.com/toolhouse/monitoring-dotnet/issues/new) for discussion prior to submitting a pull request. If you're willing to contribute changes/fixes mention that in the issue report or discussion. If you're reporting a bug be as specific as possible about the conditions causing the bug. If possible, attach a small sample project illustrating the issue.
 
 One of the primary objectives of this project is to keep the library as simple and small as possible. If a proposed change is not a common use case or introduces undue complexity it may not be accepted.
+
+## License
+
+Copyright 2017 Toolhouse, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
