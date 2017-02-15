@@ -1,2 +1,4 @@
+# Travis CI configuration
+# https://travis-ci.org/
 language: csharp
 solution: Toolhouse.Monitoring.sln
