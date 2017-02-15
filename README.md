@@ -54,8 +54,9 @@ To push a new version to Nuget:
 
 1. Update the `AssemblyInformationalVersion` attribute in [`AssemblyInfo.cs`](./Toolhouse.Monitoring/Properies/AssemblyInfo.cs).
 2. Commit your changes.
-3. Run [`package.cmd`](./package.cmd) to build a new package in `Dist/`.
-4. Push your package via `nuget push` (see `package.cmd` output for instructions).
+3. Tag your version: `git tag vX.X.X` and push your tags.
+4. Run [`package.cmd`](./package.cmd) to build a new package in `Dist/`.
+5. Push your package via `nuget push` (see `package.cmd` output for instructions).
 
 ## Contributing
 
