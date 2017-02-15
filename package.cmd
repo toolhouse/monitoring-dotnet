@@ -7,7 +7,11 @@ rmdir /S /Q Dist
 mkdir Dist
 
 pushd Toolhouse.Monitoring
-nuget pack -OutputDirectory ..\Dist Toolhouse.Monitoring.csproj || (popd && exit /B 201)
+nuget pack ^
+    -OutputDirectory ..\Dist ^
+    -Prop Configuration=Release ^
+    Toolhouse.Monitoring.csproj ^
+    || (popd && exit /B 201)
 
 pushd Dist
 for %%f in (*.nupkg) do (
