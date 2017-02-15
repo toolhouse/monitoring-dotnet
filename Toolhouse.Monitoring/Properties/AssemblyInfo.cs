@@ -33,4 +33,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 // Nuget prefers AssemblyInformationalVersion, so modify this when cutting Nuget releases
-[assembly: AssemblyInformationalVersion("1.0.0-alpha1")]
+[assembly: AssemblyInformationalVersion("1.0.0-alpha2")]
