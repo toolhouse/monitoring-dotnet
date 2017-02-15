@@ -48,6 +48,15 @@ RouteTable.Routes.IgnoreRoute("metrics");
 RouteTable.Routes.IgnoreRoute("readiness");
 ```
 
+## Packaging
+
+To push a new version to Nuget:
+
+1. Update the `AssemblyInformationalVersion` attribute in [`AssemblyInfo.cs`](./Toolhouse.Monitoring/Properies/AssemblyInfo.cs).
+2. Commit your changes.
+3. Run [`package.cmd`](./package.cmd) to build a new package in `Dist/`.
+4. Push your package via `nuget push` (see `package.cmd` output for instructions).
+
 ## Contributing
 
 To request a new feature or report a bug [open an issue in Github](https://github.com/toolhouse/monitoring-dotnet/issues/new) for discussion prior to submitting a pull request. If you're willing to contribute changes/fixes mention that in the issue report or discussion. If you're reporting a bug be as specific as possible about the conditions causing the bug. If possible, attach a small sample project illustrating the issue.
