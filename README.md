@@ -47,3 +47,9 @@ RouteTable.Routes.Ignore("health");
 RouteTable.Routes.IgnoreRoute("metrics");
 RouteTable.Routes.IgnoreRoute("readiness");
 ```
+
+## Contributing
+
+To request a new feature or report a bug [open an issue in Github](https://github.com/toolhouse/monitoring-dotnet/issues/new) for discussion prior to submitting a pull request. If you're willing to contribute changes/fixes mention that in the issue report or discussion. If you're reporting a bug be as specific as possible about the conditions causing the bug. If possible, attach a small sample project illustrating the issue.
+
+One of the primary objectives of this project is to keep the library as simple and small as possible. If a proposed change is not a common use case or introduces undue complexity it may not be accepted.
