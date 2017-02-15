@@ -1,7 +1,11 @@
 REM Builds the project.
 
+nuget restore
+
 pushd Toolhouse.Monitoring
 
-msbuild || (popd && exit /B 101)
+msbuild ^
+    /p:Configuration=Release ^
+    || (popd && exit /B 101)
 
 popd
