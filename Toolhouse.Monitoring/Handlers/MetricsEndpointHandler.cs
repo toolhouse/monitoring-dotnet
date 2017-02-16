@@ -9,7 +9,7 @@ namespace Toolhouse.Monitoring.Handlers
     /// <summary>
     /// IHttpHandler implementation that provides a Prometheus metrics scraping endpoint.
     /// </summary>
-    class MetricsEndpointHandler : AbstractHttpHandler
+    public class MetricsEndpointHandler : AbstractHttpHandler
     {
         public override void ProcessRequest(HttpContext context)
         {
