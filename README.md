@@ -1,6 +1,6 @@
 # Toolhouse Monitoring
 
-[![NuGet](https://img.shields.io/nuget/v/Toolhouse.Monitoring.svg)]()
+[![NuGet](https://img.shields.io/nuget/v/Toolhouse.Monitoring.svg)](https://www.nuget.org/packages/Toolhouse.Monitoring/)
 
 This library adds logging and monitoring capabilities to ASP.net websites. It provides:
 
