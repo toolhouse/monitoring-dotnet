@@ -2,3 +2,9 @@
 # https://travis-ci.org/
 language: csharp
 solution: Toolhouse.Monitoring.sln
+install:
+  - nuget restore Toolhouse.Monitoring.sln
+  - nuget install NUnit.Console -Version 3.6.0 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release Toolhouse.Monitoring.sln
+  - mono ./testrunner/NUnit.ConsoleRunner.3.6.0/tools/nunit3-console.exe ./Toolhouse.Monitoring.Tests/bin/Release/Toolhouse.Monitoring.Tests.dll
