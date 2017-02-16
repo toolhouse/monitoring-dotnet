@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 
 using Prometheus;
@@ -9,7 +9,7 @@ namespace Toolhouse.Monitoring.Handlers
     /// <summary>
     /// IHttpHandler implementation that provides a Prometheus metrics scraping endpoint.
     /// </summary>
-    public class MetricsEndpointHandler : AbstractHttpHandler
+    class MetricsEndpointHandler : AbstractHttpHandler
     {
         public override void ProcessRequest(HttpContext context)
         {
