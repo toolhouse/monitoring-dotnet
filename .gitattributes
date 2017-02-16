@@ -2,12 +2,6 @@
 # about line endings out of global config and into the repository itself.
 
 ################################################################################
-# Check out all files with line endings set according to the `core.eol` setting
-# (defaults to CRLF on Windows, LF on Mac).
-################################################################################
-* text=auto
-
-################################################################################
 # Mark some files as always to be checked out with CRLF line endings. This is to
 # prevent breaking things when moving files between platforms outside git (i.e.
 # via FTP). If you add an extension to this list you MUST ALSO add it to
