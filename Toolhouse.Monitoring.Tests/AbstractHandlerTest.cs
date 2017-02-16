@@ -1,15 +1,15 @@
 ﻿using System;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 using Toolhouse.Monitoring.Handlers;
 
 namespace Toolhouse.Monitoring.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class AbstractHandlerTest
     {
-        [TestMethod]
+        [Test]
         public void TestBasicAuthSucceedsWithValidUserAndPassword()
         {
             var header = "Basic Zm9vOmJhcg==";
@@ -21,7 +21,7 @@ namespace Toolhouse.Monitoring.Tests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestBasicAuthSucceedsWithEmptyPassword()
         {
             var header = "Basic Zm9v";
@@ -33,7 +33,7 @@ namespace Toolhouse.Monitoring.Tests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestBasicAuthSucceedsWithNoUsernameConfigured()
         {
             var header = "";
@@ -44,7 +44,7 @@ namespace Toolhouse.Monitoring.Tests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestBasicAuthFailsWithInvalidUser()
         {
             var header = "Basic Zm9vOmJhcg==";
@@ -56,7 +56,7 @@ namespace Toolhouse.Monitoring.Tests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestBasicAuthFailsWithMissingHeader()
         {
             var header = "";
