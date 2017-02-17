@@ -8,7 +8,7 @@ namespace Toolhouse.Monitoring.Modules
     /// HTTP module that adds basic Prometheus instrumenting to incoming HTTP requests.
     /// It also adds an endpoint at "/metrics" for Prometheus servers to scrape.
     /// </summary>
-    class MetricsModule : IHttpModule
+    public class MetricsModule : IHttpModule
     {
         public void Dispose()
         {

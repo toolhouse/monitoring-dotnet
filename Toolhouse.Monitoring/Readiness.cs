@@ -11,13 +11,13 @@ namespace Toolhouse.Monitoring
     /// </summary>
     public static class Readiness
     {
-        private static readonly IList<IDependency> _dependencies = new List<IDependency>();
+        private static readonly IList<IDependency> Dependencies = new List<IDependency>();
 
         public static void AddDependency(IDependency dependency)
         {
-            lock (_dependencies)
+            lock (Dependencies)
             {
-                _dependencies.Add(dependency);
+                Dependencies.Add(dependency);
             }
         }
 
@@ -43,8 +43,8 @@ namespace Toolhouse.Monitoring
         /// <summary>
         /// Adds a dependency on a third party website.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="url"></param>
+        /// <param name="name">Name of the dependency.</param>
+        /// <param name="url">URL to request during dependency check.</param>
         public static void AddHttpDependency(string name, string url)
         {
             AddDependency(new HttpDependency(name, url));
@@ -58,19 +58,17 @@ namespace Toolhouse.Monitoring
             AddDependency(new SmtpDependency("smtp"));
         }
 
-        /// <summary>
-        /// Checks the current status of all dependencies.
-        /// </summary>
         public static IEnumerable<DependencyStatus> CheckDependencies()
         {
             List<IDependency> iterableDependencies;
 
-            lock (_dependencies)
+            lock (Dependencies)
             {
-                iterableDependencies = new List<IDependency>(_dependencies);
+                iterableDependencies = new List<IDependency>(Dependencies);
             }
 
-            return iterableDependencies.AsParallel().Select(dep => {
+            return iterableDependencies.AsParallel().Select(dep =>
+            {
                 try
                 {
                     return dep.Check();
@@ -78,11 +76,8 @@ namespace Toolhouse.Monitoring
                 catch (Exception ex)
                 {
                     // Any exception during dependency check = the dependency is down.
-                    return new DependencyStatus(
-                        dep,
-                        false,
-                        string.Format("Exception during readiness check ({0}): {1}", ex.GetType().FullName, ex.Message)
-                    );
+                    var message = string.Format("Exception during readiness check ({0}): {1}", ex.GetType().FullName, ex.Message);
+                    return new DependencyStatus(dep, false, message);
                 }
             });
         }

@@ -15,7 +15,7 @@ namespace Toolhouse.Monitoring.Handlers
         private const string UsernameSetting = "Toolhouse.Monitoring.Username";
         private const string PasswordSetting = "Toolhouse.Monitoring.PasswordSha256";
 
-        private static readonly Regex sha256HashRegex = new Regex(@"^[0-9a-f]{64}$");
+        private static readonly Regex Sha256HashRegex = new Regex(@"^[0-9a-f]{64}$");
 
         public virtual bool IsReusable
         {
@@ -23,6 +23,46 @@ namespace Toolhouse.Monitoring.Handlers
             {
                 return true;
             }
+        }
+
+        public static bool CheckAuthHeader(string authHeader, string username, string passwordSha256)
+        {
+            var parsed = ParseBasicAuthHeader(authHeader);
+            var headerUsername = parsed.Item1;
+            var headerPassword = parsed.Item2;
+
+            var usernameOk = string.Equals(username, headerUsername, StringComparison.OrdinalIgnoreCase);
+
+            var passwordConfigured = !string.IsNullOrEmpty(passwordSha256);
+            var passwordMatches = string.Equals(passwordSha256, HashPassword(headerPassword), StringComparison.OrdinalIgnoreCase);
+            var passwordOk = !passwordConfigured || passwordMatches;
+
+            return usernameOk && passwordOk;
+        }
+
+        /// <returns>
+        /// A tuple with username and password elements.
+        /// </returns>
+        public static Tuple<string, string> ParseBasicAuthHeader(string header)
+        {
+            /* RFC for Basic Auth: https://tools.ietf.org/html/rfc2617#section-2
+             * Header looks like this:
+             *  Authorization: Basic <user:pass base64 encoded>
+             */
+
+            if (header == null || !header.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
+            {
+                return Tuple.Create("", "");
+            }
+
+            var userColonPassBytes = Convert.FromBase64String(header.Substring("Basic ".Length).Trim());
+            var userColonPass = Encoding.UTF8.GetString(userColonPassBytes);
+
+            var colonPos = userColonPass.IndexOf(':');
+            var user = colonPos >= 0 ? userColonPass.Substring(0, colonPos) : userColonPass;
+            var password = colonPos >= 0 ? userColonPass.Substring(colonPos + 1) : "";
+
+            return Tuple.Create(user, password);
         }
 
         public abstract void ProcessRequest(HttpContext context);
@@ -51,53 +91,6 @@ namespace Toolhouse.Monitoring.Handlers
             return true;
         }
 
-        public static bool CheckAuthHeader(string authHeader, string username, string passwordSha256)
-        {
-            var parsed = ParseBasicAuthHeader(authHeader);
-            var headerUsername = parsed.Item1;
-            var headerPassword = parsed.Item2;
-
-            var usernameMatches = string.Equals(username, headerUsername, StringComparison.OrdinalIgnoreCase);
-            var passwordConfigured = !string.IsNullOrEmpty(passwordSha256);
-            var passwordMatches = (
-                !passwordConfigured ||
-                string.Equals(passwordSha256, HashPassword(headerPassword), StringComparison.OrdinalIgnoreCase)
-            );
-
-            return usernameMatches && passwordMatches;
-        }
-
-        /// <returns>
-        /// A tuple with username and password elements.
-        /// </returns>
-        public static Tuple<string,string> ParseBasicAuthHeader(string header)
-        {
-            // RFC for Basic Auth: https://tools.ietf.org/html/rfc2617#section-2
-            // Header looks like this:
-            //  Authorization: Basic <user:pass base64 encoded>
-
-            if (header == null || !header.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
-            {
-                return Tuple.Create("", "");
-            }
-
-            var userColonPassBytes = Convert.FromBase64String(header.Substring("Basic ".Length).Trim());
-            var userColonPass = Encoding.UTF8.GetString(userColonPassBytes);
-
-            var colonPos = userColonPass.IndexOf(':');
-            var user = colonPos >= 0 ? userColonPass.Substring(0, colonPos) : userColonPass;
-            var password = colonPos >= 0 ? userColonPass.Substring(colonPos + 1) : "";
-
-            return Tuple.Create(user, password);
-        }
-
-        private static string HashPassword(string password)
-        {
-            var bytes = Encoding.UTF8.GetBytes(password);
-            var hashBytes = SHA256.Create().ComputeHash(bytes);
-            return BitConverter.ToString(hashBytes).Replace("-", "");
-        }
-
         /// <returns>
         /// Username used for HTTP basic auth.
         /// </returns>
@@ -122,15 +115,19 @@ namespace Toolhouse.Monitoring.Handlers
                 return "";
             }
 
-            if (!sha256HashRegex.IsMatch(hash))
+            if (!Sha256HashRegex.IsMatch(hash))
             {
-                throw new Exception(string.Format(
-                    "Invalid password hash specified for {0}: Should be a 64-character hex string",
-                    hash
-                ));
+                throw new Exception(string.Format("Invalid password hash specified for {0}: Should be a 64-character hex string", hash));
             }
 
             return hash;
+        }
+
+        private static string HashPassword(string password)
+        {
+            var bytes = Encoding.UTF8.GetBytes(password);
+            var hashBytes = SHA256.Create().ComputeHash(bytes);
+            return BitConverter.ToString(hashBytes).Replace("-", "");
         }
     }
 }

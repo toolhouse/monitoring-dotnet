@@ -41,11 +41,9 @@ namespace Toolhouse.Monitoring.Dependencies
                     throw new Exception("1 + 1 apparently does not equal 2 in this universe.");
                 }
 
-                return new DependencyStatus(
-                    this,
-                    true,
-                    string.Format("Using database '{0}'", builder.InitialCatalog)
-                );
+                var message = string.Format("Using database '{0}'", builder.InitialCatalog);
+
+                return new DependencyStatus(this, true, message);
             }
         }
     }
