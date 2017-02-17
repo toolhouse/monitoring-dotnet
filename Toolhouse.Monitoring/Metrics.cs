@@ -1,6 +1,4 @@
 using System;
-using System.Configuration;
-using System.Diagnostics;
 
 namespace Toolhouse.Monitoring
 {
@@ -155,77 +153,6 @@ namespace Toolhouse.Monitoring
                 .Labels(
                     GetBackend()
                 ).Observe(duration.TotalSeconds);
-        }
-
-        /// <summary>
-        /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
-        /// </summary>
-        /// <param name="name">Descriptive name of thing being done. Should be a singular noun, e.g. "salesforce".</param>
-        /// <param name="callback">Code to run. Should return true for success, false for failure.</param>
-        public static void InstrumentApiCall(string name, Func<bool> makeRequest)
-        {
-            // TODO: Refactor into a class.
-            var requestsCounter = Prometheus.Metrics.CreateCounter(
-                string.Format("{0}_requests_total", name),
-                "",
-                labelNames: new string[] { "backend" }
-            );
-            var responsesCounter = Prometheus.Metrics.CreateCounter(
-                string.Format("{0}_responses_total", name),
-                "",
-                labelNames: new string[] { "backend", "success" }
-            );
-            var currentRequestsGauge = Prometheus.Metrics.CreateGauge(
-                string.Format("{0}_current_requests", name),
-                "",
-                labelNames: new string[] { "backend" }
-            );
-            var durationHistogram = Prometheus.Metrics.CreateHistogram(
-                string.Format("{0}_request_duration_seconds", name),
-                "",
-                null,
-                labelNames: new string []
-                {
-                    "success",
-                    "backend",
-                }
-            );
-
-            bool success = false;
-            var stopwatch = new Stopwatch();
-            var backend = GetBackend();
-
-            Action logMetrics = () =>
-            {
-                stopwatch.Stop();
-
-                currentRequestsGauge.Labels(backend).Dec();
-                responsesCounter.Labels(
-                    backend,
-                    success ? "1" : "0"
-                ).Inc();
-                durationHistogram.Labels(
-                    success ? "1" : "0",
-                    backend
-                ).Observe(stopwatch.Elapsed.TotalSeconds);
-            };
-
-            stopwatch.Start();
-            requestsCounter.Labels(backend).Inc();
-            currentRequestsGauge.Labels(backend).Inc();
-
-            try
-            {
-                success = makeRequest();
-            }
-            catch (Exception)
-            {
-                success = false;
-                logMetrics();
-                throw;
-            }
-
-            logMetrics();
         }
 
         private static Prometheus.Gauge.Child CreateCurrentHttpRequestsGauge()

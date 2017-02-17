@@ -72,6 +72,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AbstractHandlerTest.cs" />
+    <Compile Include="HttpRequestMetricsTests.cs" />
+    <Compile Include="LabelsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

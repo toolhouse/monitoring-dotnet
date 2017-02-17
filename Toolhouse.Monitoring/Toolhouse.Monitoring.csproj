@@ -42,6 +42,8 @@
     <Compile Include="Dependencies\SmtpDependency.cs" />
     <Compile Include="Handlers\AbstractHttpHandler.cs" />
     <Compile Include="Handlers\HealthEndpointHandler.cs" />
+    <Compile Include="HttpRequestMetrics.cs" />
+    <Compile Include="Labels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Readiness.cs" />
     <Compile Include="Dependencies\DependencyStatus.cs" />
