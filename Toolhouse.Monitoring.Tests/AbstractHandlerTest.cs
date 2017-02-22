@@ -1,5 +1,3 @@
-using System;
-
 using NUnit.Framework;
 
 using Toolhouse.Monitoring.Handlers;
@@ -16,9 +14,7 @@ namespace Toolhouse.Monitoring.Tests
             var username = "foo";
             var hashedPassword = "fcde2b2edba56bf408601fb721fe9b5c338d10ee429ea04fae5511b68fbf8fb9";
 
-            Assert.IsTrue(
-                AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword)
-            );
+            Assert.IsTrue(AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword));
         }
 
         [Test]
@@ -28,9 +24,7 @@ namespace Toolhouse.Monitoring.Tests
             var username = "foo";
             var hashedPassword = "";
 
-            Assert.IsTrue(
-                AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword)
-            );
+            Assert.IsTrue(AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword));
         }
 
         [Test]
@@ -39,9 +33,7 @@ namespace Toolhouse.Monitoring.Tests
             var header = "";
             var username = "";
             var hashedPassword = "";
-            Assert.IsTrue(
-                AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword)
-            );
+            Assert.IsTrue(AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword));
         }
 
         [Test]
@@ -51,9 +43,7 @@ namespace Toolhouse.Monitoring.Tests
             var username = "obviously-wrong";
             var hashedPassword = "fcde2b2edba56bf408601fb721fe9b5c338d10ee429ea04fae5511b68fbf8fb9";
 
-            Assert.IsFalse(
-                AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword)
-            );
+            Assert.IsFalse(AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword));
         }
 
         [Test]

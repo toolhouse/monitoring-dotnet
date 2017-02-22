@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Toolhouse.Monitoring.Dependencies
 {
@@ -10,12 +7,12 @@ namespace Toolhouse.Monitoring.Dependencies
     /// </summary>
     internal class FuncDependency : IDependency
     {
-        private Func<bool> _checker;
+        private Func<bool> checker;
 
         public FuncDependency(string name, Func<bool> checker)
         {
             this.Name = name;
-            _checker = checker;
+            this.checker = checker;
         }
 
         public string Name
@@ -26,7 +23,7 @@ namespace Toolhouse.Monitoring.Dependencies
 
         public DependencyStatus Check()
         {
-            var ready = _checker();
+            var ready = checker();
             return new DependencyStatus(this, ready, "");
         }
     }

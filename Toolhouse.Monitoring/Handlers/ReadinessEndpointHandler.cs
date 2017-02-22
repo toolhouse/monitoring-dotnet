@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 
 using Newtonsoft.Json;
@@ -33,10 +31,8 @@ namespace Toolhouse.Monitoring.Handlers
                     resp.TrySkipIisCustomErrors = true;
                     resp.StatusCode = 503;
                 }
-                output[status.Dependency.Name] = new {
-                    ready = status.IsReady,
-                    message = status.Message,
-                };
+
+                output[status.Dependency.Name] = new { ready = status.IsReady, message = status.Message };
             }
 
             var serializer = new JsonSerializer();

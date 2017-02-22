@@ -1,4 +1,3 @@
-using System;
 using System.Web;
 
 using Prometheus;
@@ -29,11 +28,7 @@ namespace Toolhouse.Monitoring.Handlers
             response.ContentType = ScrapeHandler.GetContentType(acceptHeaders);
             response.ContentEncoding = System.Text.Encoding.UTF8;
 
-            ScrapeHandler.ProcessScrapeRequest(
-                DefaultCollectorRegistry.Instance.CollectAll(),
-                response.ContentType,
-                response.OutputStream
-            );
+            ScrapeHandler.ProcessScrapeRequest(DefaultCollectorRegistry.Instance.CollectAll(), response.ContentType, response.OutputStream);
         }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Diagnostics;
 
 namespace Toolhouse.Monitoring
@@ -43,18 +42,11 @@ namespace Toolhouse.Monitoring
         /// Increments a standard "emails sent" counter.
         /// </summary>
         /// <param name="type">Type or template of email sent.</param>
-        /// <param name="increment"></param>
+        /// <param name="increment">Amount by which to increment the counter.</param>
         public static void IncrementEmailsSentCounter(string type, int increment = 1)
         {
-            Prometheus.Metrics.CreateCounter(
-                EmailsSentMetric,
-                "",
-                labelNames: new string[] { "backend", "type" }
-            )
-                .Labels(
-                    GetBackend(),
-                    type
-                ).Inc();
+            var counter = Prometheus.Metrics.CreateCounter(EmailsSentMetric, "", "backend", "type");
+            counter.Labels(GetBackend(), type).Inc(increment);
         }
 
         /// <returns>
@@ -82,17 +74,11 @@ namespace Toolhouse.Monitoring
         /// Increments the error counter.
         /// </summary>
         /// <param name="type">String identifying the type of error.</param>
+        /// <param name="increment">Amount by which to increment.</param>
         public static void IncrementErrorsCounter(string type, int increment = 1)
         {
-            Prometheus.Metrics.CreateCounter(
-                ErrorsMetric,
-                "Errors",
-                labelNames: new string[] { "error", "backend" }
-            )
-                .Labels(
-                    type,
-                    GetBackend()
-                ).Inc(increment);
+            var counter = Prometheus.Metrics.CreateCounter(ErrorsMetric, "Errors", "error", "backend");
+            counter.Labels(type, GetBackend()).Inc(increment);
         }
 
         /// <param name="ex">
@@ -114,14 +100,8 @@ namespace Toolhouse.Monitoring
         /// </summary>
         public static void IncrementHttpRequestsCounter()
         {
-            Prometheus.Metrics.CreateCounter(
-                HttpRequestsMetric,
-                "HTTP requests",
-                labelNames: new string[] { "backend" }
-            )
-                .Labels(
-                    GetBackend()
-                ).Inc();
+            var counter = Prometheus.Metrics.CreateCounter(HttpRequestsMetric, "HTTP requests", "backend");
+            counter.Labels(GetBackend()).Inc();
         }
 
         /// <summary>
@@ -130,15 +110,8 @@ namespace Toolhouse.Monitoring
         /// <param name="statusCode">HTTP status code.</param>
         public static void IncrementHttpResponsesCounter(int statusCode)
         {
-            Prometheus.Metrics.CreateCounter(
-                HttpResponsesMetric,
-                "HTTP responses",
-                labelNames: new string[] { "backend", "status" }
-            )
-                .Labels(
-                    GetBackend(),
-                    statusCode.ToString()
-                ).Inc();
+            var counter = Prometheus.Metrics.CreateCounter(HttpResponsesMetric, "HTTP responses", "backend", "status");
+            counter.Labels(GetBackend(), statusCode.ToString()).Inc();
         }
 
         /// <summary>
@@ -146,50 +119,39 @@ namespace Toolhouse.Monitoring
         /// </summary>
         public static void ObserveHttpRequestDuration(TimeSpan duration)
         {
-            Prometheus.Metrics.CreateHistogram(
-                HttpRequestDurationMetric,
-                "Request duration (in seconds).",
-                buckets: new double[] { 0.1, 0.25, 0.5, 0.75, 1, 2, 3, 5, 10 },
-                labelNames: new string[] { "backend" }
-            )
-                .Labels(
-                    GetBackend()
-                ).Observe(duration.TotalSeconds);
+            var buckets = new double[] { 0.1, 0.25, 0.5, 0.75, 1, 2, 3, 5, 10 };
+            var histogram = Prometheus.Metrics.CreateHistogram(HttpRequestDurationMetric, "Request duration (in seconds).", buckets, "backend");
+
+            histogram.Labels(GetBackend()).Observe(duration.TotalSeconds);
         }
 
         /// <summary>
         /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
         /// </summary>
         /// <param name="name">Descriptive name of thing being done. Should be a singular noun, e.g. "salesforce".</param>
-        /// <param name="callback">Code to run. Should return true for success, false for failure.</param>
+        /// <param name="makeRequest">Code to run. Should return true for success, false for failure.</param>
         public static void InstrumentApiCall(string name, Func<bool> makeRequest)
         {
-            // TODO: Refactor into a class.
             var requestsCounter = Prometheus.Metrics.CreateCounter(
                 string.Format("{0}_requests_total", name),
                 "",
-                labelNames: new string[] { "backend" }
-            );
+                labelNames: new string[] { "backend" });
+
             var responsesCounter = Prometheus.Metrics.CreateCounter(
                 string.Format("{0}_responses_total", name),
                 "",
-                labelNames: new string[] { "backend", "success" }
-            );
+                labelNames: new string[] { "backend", "success" });
+
             var currentRequestsGauge = Prometheus.Metrics.CreateGauge(
                 string.Format("{0}_current_requests", name),
                 "",
-                labelNames: new string[] { "backend" }
-            );
+                labelNames: new string[] { "backend" });
+
             var durationHistogram = Prometheus.Metrics.CreateHistogram(
                 string.Format("{0}_request_duration_seconds", name),
                 "",
                 null,
-                labelNames: new string []
-                {
-                    "success",
-                    "backend",
-                }
-            );
+                labelNames: new string[] { "success", "backend" });
 
             bool success = false;
             var stopwatch = new Stopwatch();
@@ -200,14 +162,8 @@ namespace Toolhouse.Monitoring
                 stopwatch.Stop();
 
                 currentRequestsGauge.Labels(backend).Dec();
-                responsesCounter.Labels(
-                    backend,
-                    success ? "1" : "0"
-                ).Inc();
-                durationHistogram.Labels(
-                    success ? "1" : "0",
-                    backend
-                ).Observe(stopwatch.Elapsed.TotalSeconds);
+                responsesCounter.Labels(backend, success ? "1" : "0").Inc();
+                durationHistogram.Labels(success ? "1" : "0", backend).Observe(stopwatch.Elapsed.TotalSeconds);
             };
 
             stopwatch.Start();
@@ -230,15 +186,8 @@ namespace Toolhouse.Monitoring
 
         private static Prometheus.Gauge.Child CreateCurrentHttpRequestsGauge()
         {
-            return Prometheus.Metrics.CreateGauge(
-                CurrentHttpRequestsMetric,
-                "Number of HTTP requests in progress",
-                labelNames: new string[]
-                {
-                    "backend",
-                }
-            )
-                .Labels(GetBackend());
+            var gauge = Prometheus.Metrics.CreateGauge(CurrentHttpRequestsMetric, "Number of HTTP requests in progress", "backend");
+            return gauge.Labels(GetBackend());
         }
     }
 }

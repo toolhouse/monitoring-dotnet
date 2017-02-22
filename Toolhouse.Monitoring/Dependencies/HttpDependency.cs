@@ -1,15 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace Toolhouse.Monitoring.Dependencies
 {
     /// <summary>
     /// Dependency that makes an HTTP GET request for a URL.
     /// </summary>
-    class HttpDependency : IDependency
+    public class HttpDependency : IDependency
     {
         public HttpDependency(string name, string url, HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
         {
@@ -39,18 +36,15 @@ namespace Toolhouse.Monitoring.Dependencies
         public DependencyStatus Check()
         {
             var req = WebRequest.Create(this.Url);
-            var resp = (HttpWebResponse) req.GetResponse();
+            var resp = (HttpWebResponse)req.GetResponse();
 
-            var message = string.Format(
-                "Request returned HTTP status {0}: {1}",
-                (int)resp.StatusCode,
-                this.Url
-            );
+            var message = string.Format("Request returned HTTP status {0}: {1}", (int)resp.StatusCode, this.Url);
 
             if (resp.StatusCode != this.ExpectedStatusCode)
             {
                 throw new Exception(string.Format("{0} (expected {1})", message, this.ExpectedStatusCode));
             }
+
             return new DependencyStatus(this, true, message);
         }
     }

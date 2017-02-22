@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Toolhouse C# Coding Standard" Description=" " ToolsVersion="14.0">
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
+    <Rule Id="CS8019" Action="Warning" />
+    <Rule Id="CS8020" Action="Warning" />
+    <Rule Id="CS8040" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.EditorFeatures" RuleNamespace="Microsoft.CodeAnalysis.CSharp.EditorFeatures">
+    <Rule Id="UseAutoProperty" Action="None" />
+    <Rule Id="UseAutoPropertyFadedToken" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
+    <Rule Id="IDE0001" Action="None" />
+    <Rule Id="IDE0002" Action="None" />
+    <Rule Id="IDE0003" Action="None" />
+    <Rule Id="IDE0004" Action="None" />
+    <Rule Id="IDE0005" Action="None" />
+    <Rule Id="IDE1005" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1101" Action="None" />
+    <Rule Id="SA1111" Action="None" />
+    <Rule Id="SA1122" Action="None" />
+    <Rule Id="SA1200" Action="None" />
+    <Rule Id="SA1305" Action="Warning" />
+    <Rule Id="SA1604" Action="None" />
+    <Rule Id="SA1605" Action="None" />
+    <Rule Id="SA1610" Action="None" />
+    <Rule Id="SA1611" Action="None" />
+    <Rule Id="SA1633" Action="None" />
+    <Rule Id="SA1634" Action="None" />
+    <Rule Id="SA1635" Action="None" />
+    <Rule Id="SA1636" Action="None" />
+    <Rule Id="SA1637" Action="None" />
+    <Rule Id="SA1638" Action="None" />
+    <Rule Id="SA1640" Action="None" />
+    <Rule Id="SA1641" Action="None" />
+    <Rule Id="SA1652" Action="None" />
+  </Rules>
+</RuleSet>
