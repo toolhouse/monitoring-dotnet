@@ -10,6 +10,10 @@ namespace Toolhouse.Monitoring
     /// </summary>
     public sealed class HttpRequestMetrics
     {
+        private readonly Labels m_labels;
+        private readonly string m_name;
+        private readonly Stopwatch m_stopwatch;
+        private readonly Gauge m_currentRequests;
         /// <summary>
         /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
         /// </summary>
@@ -139,10 +143,5 @@ namespace Toolhouse.Monitoring
             Prometheus.Metrics.CreateHistogram(string.Format("{0}_request_duration_seconds", m_name), string.Empty, null, m_labels.Keys)
                 .Labels(m_labels.Values).Observe(m_stopwatch.Elapsed.TotalSeconds);
         }
-
-        readonly Labels m_labels;
-        readonly string m_name;
-        readonly Stopwatch m_stopwatch;
-        readonly Gauge m_currentRequests;
     }
 }

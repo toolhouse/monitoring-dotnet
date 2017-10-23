@@ -7,6 +7,12 @@ namespace Toolhouse.Monitoring
 {
     public sealed class Labels
     {
+        private const string c_backendLabelKey = "backend";
+        private const string c_statusCodeLabelKey = "statusCode";
+        private const string c_successLabelKey = "success";
+
+        private readonly Dictionary<string, string> m_labels;
+
         public Labels()
         {
             m_labels = new Dictionary<string, string>();
@@ -56,11 +62,5 @@ namespace Toolhouse.Monitoring
         {
             this[c_successLabelKey] = "0";
         }
-
-        const string c_backendLabelKey = "backend";
-        const string c_statusCodeLabelKey = "statusCode";
-        const string c_successLabelKey = "success";
-
-        readonly Dictionary<string, string> m_labels;
     }
 }
