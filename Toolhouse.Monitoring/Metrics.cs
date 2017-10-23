@@ -1,4 +1,6 @@
 using System;
+using System.Configuration;
+using System.Diagnostics;
 
 namespace Toolhouse.Monitoring
 {
@@ -153,6 +155,17 @@ namespace Toolhouse.Monitoring
                 .Labels(
                     GetBackend()
                 ).Observe(duration.TotalSeconds);
+        }
+
+        /// <summary>
+        /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
+        /// </summary>
+        /// <param name="name">Descriptive name of thing being done. Should be a singular noun, e.g. "salesforce".</param>
+        /// <param name="makeRequest">Code to run. Should return true for success, false for failure.</param>
+        [Obsolete("Use HttpRequestMetrics.Instrument instead.")]
+        public static void InstrumentApiCall(string name, Func<bool> makeRequest)
+        {
+            HttpRequestMetrics.Instrument(name, () => { makeRequest(); });
         }
 
         private static Prometheus.Gauge.Child CreateCurrentHttpRequestsGauge()
