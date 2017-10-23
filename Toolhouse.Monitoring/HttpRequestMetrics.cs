@@ -14,6 +14,19 @@ namespace Toolhouse.Monitoring
         private readonly string m_name;
         private readonly Stopwatch m_stopwatch;
         private readonly Gauge m_currentRequests;
+
+        /// <summary>
+        /// Creates an instance of HttpRequestMetrics
+        /// </summary>
+        /// <param name="name"></param>
+        public HttpRequestMetrics(string name)
+        {
+            m_labels = new Labels();
+            m_name = name;
+            m_stopwatch = new Stopwatch();
+            m_currentRequests = Prometheus.Metrics.CreateGauge(string.Format("{0}_current_requests", m_name), string.Empty, m_labels.BackendLabelKey);
+        }
+
         /// <summary>
         /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
         /// </summary>
@@ -74,14 +87,6 @@ namespace Toolhouse.Monitoring
                     return request(requestMetrics.m_labels);
                 });
             });
-        }
-
-        private HttpRequestMetrics(string name)
-        {
-            m_labels = new Labels();
-            m_name = name;
-            m_stopwatch = new Stopwatch();
-            m_currentRequests = Prometheus.Metrics.CreateGauge(string.Format("{0}_current_requests", m_name), string.Empty, m_labels.BackendLabelKey);
         }
 
         private static void InstrumentWithMetrics(string name, Action<HttpRequestMetrics> instrumentWithMetrics)
