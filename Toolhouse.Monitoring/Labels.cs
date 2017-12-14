@@ -5,7 +5,7 @@ using System.Net;
 
 namespace Toolhouse.Monitoring
 {
-    public sealed class Labels
+    public class Labels
     {
         private const string c_backendLabelKey = "backend";
         private const string c_statusCodeLabelKey = "statusCode";

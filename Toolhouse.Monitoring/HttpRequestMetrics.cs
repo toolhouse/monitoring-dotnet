@@ -1,14 +1,13 @@
 using Prometheus;
 using System;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Toolhouse.Monitoring
 {
     /// <summary>
     /// Provides methods for instrumenting requests to an external API (e.g. via REST / SOAP).
     /// </summary>
-    public sealed class HttpRequestMetrics
+    public class HttpRequestMetrics
     {
         private readonly Labels m_labels;
         private readonly string m_name;
@@ -27,89 +26,12 @@ namespace Toolhouse.Monitoring
             m_currentRequests = Prometheus.Metrics.CreateGauge(string.Format("{0}_current_requests", m_name), string.Empty, m_labels.BackendLabelKey);
         }
 
-        /// <summary>
-        /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
-        /// </summary>
-        /// <param name="name">Descriptive name of thing being done. Should be a singular noun, e.g. "salesforce".</param>
-        /// <param name="request">An action which will perform the request</param>
-        public static void Instrument(string name, Action request)
+        public Labels Labels
         {
-            InstrumentWithMetrics(name, requestMetrics =>
-            {
-                requestMetrics.PerformRequest(request);
-            });
+            get { return m_labels; }
         }
 
-        /// <summary>
-        /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
-        /// </summary>
-        /// <param name="name">Descriptive name of thing being done. Should be a singular noun, e.g. "salesforce".</param>
-        /// <param name="request">An action which will perform the request</param>
-        /// <remarks>A mutable Labels instance will be provided to the request.</remarks>
-        public static void Instrument(string name, Action<Labels> request)
-        {
-            InstrumentWithMetrics(name, requestMetrics =>
-            {
-                requestMetrics.PerformRequest(() =>
-                {
-                    request(requestMetrics.m_labels);
-                });
-            });
-        }
-
-        /// <summary>
-        /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
-        /// </summary>
-        /// <param name="name">Descriptive name of thing being done. Should be a singular noun, e.g. "salesforce".</param>
-        /// <param name="request">An action which will perform the request</param>
-        /// <returns>The return value of the request.</returns>
-        public static T Instrument<T>(string name, Func<T> request)
-        {
-            return InstrumentWithMetrics(name, requestMetrics =>
-            {
-                return requestMetrics.PerformRequest(request);
-            });
-        }
-
-        /// <summary>
-        /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
-        /// </summary>
-        /// <param name="name">Descriptive name of thing being done. Should be a singular noun, e.g. "salesforce".</param>
-        /// <param name="request">An action which will perform the request</param>
-        /// <remarks>A mutable Labels instance will be provided to the request.</remarks>
-        /// <returns>The return value of the request.</returns>
-        public static T Instrument<T>(string name, Func<Labels, T> request)
-        {
-            return InstrumentWithMetrics(name, requestMetrics =>
-            {
-                return requestMetrics.PerformRequest(() =>
-                {
-                    return request(requestMetrics.m_labels);
-                });
-            });
-        }
-
-        private static void InstrumentWithMetrics(string name, Action<HttpRequestMetrics> instrumentWithMetrics)
-        {
-            InstrumentWithMetrics(name, requestMetrics =>
-            {
-                instrumentWithMetrics(requestMetrics);
-                return true;
-            });
-        }
-
-        private static T InstrumentWithMetrics<T>(string name, Func<HttpRequestMetrics, T> instrumentWithMetrics)
-        {
-            if (name.Any(char.IsWhiteSpace))
-            {
-                throw new ArgumentException("Parameter must be a single word.", "name");
-            }
-
-            HttpRequestMetrics requestMetrics = new HttpRequestMetrics(name);
-            return instrumentWithMetrics(requestMetrics);
-        }
-
-        private void PerformRequest(Action request)
+        public void PerformRequest(Action request)
         {
             PerformRequest(() =>
             {
@@ -118,7 +40,7 @@ namespace Toolhouse.Monitoring
             });
         }
 
-        private T PerformRequest<T>(Func<T> request)
+        public T PerformRequest<T>(Func<T> request)
         {
             StartGatheringMetrics();
             T result = request();

@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Prometheus.Advanced;
 using System;
 using System.Linq;
@@ -12,19 +12,19 @@ namespace Toolhouse.Monitoring.Tests
         public void TestRequestIsExecuted()
         {
             bool requestHasExecuted = false;
-            HttpRequestMetrics.Instrument(string.Empty, () => { requestHasExecuted = true; });
+            Metrics.Instrument(string.Empty, () => { requestHasExecuted = true; });
             Assert.IsTrue(requestHasExecuted);
 
             requestHasExecuted = false;
-            HttpRequestMetrics.Instrument(string.Empty, labels => { requestHasExecuted = true; });
+            Metrics.Instrument(string.Empty, labels => { requestHasExecuted = true; });
             Assert.IsTrue(requestHasExecuted);
 
             requestHasExecuted = false;
-            HttpRequestMetrics.Instrument(string.Empty, () => requestHasExecuted = true);
+            Metrics.Instrument(string.Empty, () => requestHasExecuted = true);
             Assert.IsTrue(requestHasExecuted);
 
             requestHasExecuted = false;
-            HttpRequestMetrics.Instrument(string.Empty, labels => requestHasExecuted = true);
+            Metrics.Instrument(string.Empty, labels => requestHasExecuted = true);
             Assert.IsTrue(requestHasExecuted);
         }
 
@@ -32,48 +32,48 @@ namespace Toolhouse.Monitoring.Tests
         public void TestInstrumentReturnsRequestValue()
         {
             int randomReturnValue = new Random().Next();
-            Assert.AreEqual(randomReturnValue, HttpRequestMetrics.Instrument(string.Empty, () => randomReturnValue));
-            Assert.AreEqual(randomReturnValue, HttpRequestMetrics.Instrument(string.Empty, labels => randomReturnValue));
+            Assert.AreEqual(randomReturnValue, Metrics.Instrument(string.Empty, () => randomReturnValue));
+            Assert.AreEqual(randomReturnValue, Metrics.Instrument(string.Empty, labels => randomReturnValue));
         }
 
         [Test]
         public void TestRequestCounterIsIncremented()
         {
             string name = "example";
-            TestCounterIsIncremented(string.Format("{0}_requests_total", name), () => { HttpRequestMetrics.Instrument(name, () => { }); });
-            TestCounterIsIncremented(string.Format("{0}_requests_total", name), () => { HttpRequestMetrics.Instrument(name, labels => { }); });
-            TestCounterIsIncremented(string.Format("{0}_requests_total", name), () => { HttpRequestMetrics.Instrument(name, () => true); });
-            TestCounterIsIncremented(string.Format("{0}_requests_total", name), () => { HttpRequestMetrics.Instrument(name, labels => true); });
+            TestCounterIsIncremented(string.Format("{0}_requests_total", name), () => { Metrics.Instrument(name, () => { }); });
+            TestCounterIsIncremented(string.Format("{0}_requests_total", name), () => { Metrics.Instrument(name, labels => { }); });
+            TestCounterIsIncremented(string.Format("{0}_requests_total", name), () => { Metrics.Instrument(name, () => true); });
+            TestCounterIsIncremented(string.Format("{0}_requests_total", name), () => { Metrics.Instrument(name, labels => true); });
         }
 
         [Test]
         public void TestResponseCounterIsIncremented()
         {
             string name = "example";
-            TestCounterIsIncremented(string.Format("{0}_responses_total", name), () => { HttpRequestMetrics.Instrument(name, () => { }); });
-            TestCounterIsIncremented(string.Format("{0}_responses_total", name), () => { HttpRequestMetrics.Instrument(name, labels => { }); });
-            TestCounterIsIncremented(string.Format("{0}_responses_total", name), () => { HttpRequestMetrics.Instrument(name, () => true); });
-            TestCounterIsIncremented(string.Format("{0}_responses_total", name), () => { HttpRequestMetrics.Instrument(name, labels => true); });
+            TestCounterIsIncremented(string.Format("{0}_responses_total", name), () => { Metrics.Instrument(name, () => { }); });
+            TestCounterIsIncremented(string.Format("{0}_responses_total", name), () => { Metrics.Instrument(name, labels => { }); });
+            TestCounterIsIncremented(string.Format("{0}_responses_total", name), () => { Metrics.Instrument(name, () => true); });
+            TestCounterIsIncremented(string.Format("{0}_responses_total", name), () => { Metrics.Instrument(name, labels => true); });
         }
 
         [Test]
         public void TestCurrentRequestCounterIsIncrementedAndDecremented()
         {
             string name = "example";
-            TestCurrentRequestCounterIsIncrementedAndDecremented(name, assert => { HttpRequestMetrics.Instrument(name, () => { assert(); }); });
-            TestCurrentRequestCounterIsIncrementedAndDecremented(name, assert => { HttpRequestMetrics.Instrument(name, labels => { assert(); }); });
-            TestCurrentRequestCounterIsIncrementedAndDecremented(name, assert => { HttpRequestMetrics.Instrument(name, () => { assert(); return true; }); });
-            TestCurrentRequestCounterIsIncrementedAndDecremented(name, assert => { HttpRequestMetrics.Instrument(name, labels => { assert(); return true; }); });
+            TestCurrentRequestCounterIsIncrementedAndDecremented(name, assert => { Metrics.Instrument(name, () => { assert(); }); });
+            TestCurrentRequestCounterIsIncrementedAndDecremented(name, assert => { Metrics.Instrument(name, labels => { assert(); }); });
+            TestCurrentRequestCounterIsIncrementedAndDecremented(name, assert => { Metrics.Instrument(name, () => { assert(); return true; }); });
+            TestCurrentRequestCounterIsIncrementedAndDecremented(name, assert => { Metrics.Instrument(name, labels => { assert(); return true; }); });
         }
 
         [Test]
         public void TestHistogramIsCreated()
         {
             string name = "example";
-            TestHistogramIsCreated(name, () => { HttpRequestMetrics.Instrument(name, () => { }); });
-            TestHistogramIsCreated(name, () => { HttpRequestMetrics.Instrument(name, labels => { }); });
-            TestHistogramIsCreated(name, () => { HttpRequestMetrics.Instrument(name, () => true); });
-            TestHistogramIsCreated(name, () => { HttpRequestMetrics.Instrument(name, labels => true); });
+            TestHistogramIsCreated(name, () => { Metrics.Instrument(name, () => { }); });
+            TestHistogramIsCreated(name, () => { Metrics.Instrument(name, labels => { }); });
+            TestHistogramIsCreated(name, () => { Metrics.Instrument(name, () => true); });
+            TestHistogramIsCreated(name, () => { Metrics.Instrument(name, labels => true); });
         }
 
         private void TestHistogramIsCreated(string name, Action instrument)
