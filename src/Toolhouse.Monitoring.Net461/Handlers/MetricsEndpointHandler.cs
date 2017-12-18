@@ -1,4 +1,3 @@
-using System;
 using System.Web;
 
 using Prometheus;
@@ -11,9 +10,9 @@ namespace Toolhouse.Monitoring.Handlers
     /// </summary>
     public class MetricsEndpointHandler : AbstractHttpHandler
     {
-        public override void ProcessRequest(HttpContext context)
+        public override void ProcessRequestCore(HttpContext context)
         {
-            if (!CheckAuthentication(context))
+            if (!CheckAuthentication())
             {
                 return;
             }

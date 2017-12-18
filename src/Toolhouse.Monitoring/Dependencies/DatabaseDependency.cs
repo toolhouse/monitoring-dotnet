@@ -1,19 +1,17 @@
 using System;
-using System.Configuration;
 using System.Data.SqlClient;
-using System.Text.RegularExpressions;
 
 namespace Toolhouse.Monitoring.Dependencies
 {
     public class DatabaseDependency : IDependency
     {
-        public DatabaseDependency(string name, string connectionStringName)
+        public DatabaseDependency(string name, string connectionString)
         {
             this.Name = name;
-            this.ConnectionStringName = connectionStringName;
+            this.ConnectionString = connectionString;
         }
 
-        public string ConnectionStringName
+        public string ConnectionString
         {
             get;
             private set;
@@ -27,10 +25,9 @@ namespace Toolhouse.Monitoring.Dependencies
 
         public DependencyStatus Check()
         {
-            var connectionString = ConfigurationManager.ConnectionStrings[this.ConnectionStringName].ConnectionString;
-            var builder = new SqlConnectionStringBuilder(connectionString);
+            var builder = new SqlConnectionStringBuilder(ConnectionString);
 
-            using (var conn = new SqlConnection(connectionString))
+            using (var conn = new SqlConnection(ConnectionString))
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = "SELECT 1+1";

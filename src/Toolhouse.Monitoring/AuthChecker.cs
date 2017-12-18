@@ -1,36 +1,25 @@
 using System;
-using System.Configuration;
-using System.Web;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Toolhouse.Monitoring.Handlers
+namespace Toolhouse.Monitoring
 {
-    /// <summary>
-    /// Base for implementing monitoring HTTP handlers with support for basic authentication.
-    /// </summary>
-    public abstract class AbstractHttpHandler : IHttpHandler
+    public abstract class AuthChecker
     {
-        private const string UsernameSetting = "Toolhouse.Monitoring.Username";
-        private const string PasswordSetting = "Toolhouse.Monitoring.PasswordSha256";
-
         private static readonly Regex sha256HashRegex = new Regex(@"^[0-9a-f]{64}$");
 
-        public virtual bool IsReusable
+        private readonly string _username;
+        private readonly string _passwordSha256;
+
+        public AuthChecker(string username, string passwordSha256)
         {
-            get
-            {
-                return true;
-            }
+            _username = username;
+            _passwordSha256 = passwordSha256;
         }
 
-        public abstract void ProcessRequest(HttpContext context);
-
-        public bool CheckAuthentication(HttpContext context)
+        public bool CheckAuthentication()
         {
-            var req = context.Request;
-
             var username = GetBasicAuthUsername();
             var passwordSha256 = GetBasicAuthPasswordSha256();
 
@@ -40,11 +29,9 @@ namespace Toolhouse.Monitoring.Handlers
                 return true;
             }
 
-            var authHeader = req.Headers["Authorization"];
-
-            if (!CheckAuthHeader(authHeader, username, passwordSha256))
+            if (!CheckAuthHeader(GetAuthHeader(), username, passwordSha256))
             {
-                context.Response.StatusCode = 403;
+                OnInvalidAuthHeader();
                 return false;
             }
 
@@ -70,7 +57,7 @@ namespace Toolhouse.Monitoring.Handlers
         /// <returns>
         /// A tuple with username and password elements.
         /// </returns>
-        public static Tuple<string,string> ParseBasicAuthHeader(string header)
+        public static Tuple<string, string> ParseBasicAuthHeader(string header)
         {
             // RFC for Basic Auth: https://tools.ietf.org/html/rfc2617#section-2
             // Header looks like this:
@@ -91,19 +78,14 @@ namespace Toolhouse.Monitoring.Handlers
             return Tuple.Create(user, password);
         }
 
-        private static string HashPassword(string password)
-        {
-            var bytes = Encoding.UTF8.GetBytes(password);
-            var hashBytes = SHA256.Create().ComputeHash(bytes);
-            return BitConverter.ToString(hashBytes).Replace("-", "");
-        }
+        protected abstract string GetAuthHeader();
 
         /// <returns>
         /// Username used for HTTP basic auth.
         /// </returns>
         protected virtual string GetBasicAuthUsername()
         {
-            return (ConfigurationManager.AppSettings[UsernameSetting] ?? "").Trim();
+            return (_username ?? "").Trim();
         }
 
         /// <returns>
@@ -112,7 +94,7 @@ namespace Toolhouse.Monitoring.Handlers
         /// </returns>
         protected virtual string GetBasicAuthPasswordSha256()
         {
-            var hash = (ConfigurationManager.AppSettings[PasswordSetting] ?? "")
+            var hash = (_passwordSha256 ?? "")
                     .Trim()
                     .ToLower();
 
@@ -131,6 +113,17 @@ namespace Toolhouse.Monitoring.Handlers
             }
 
             return hash;
+        }
+
+        protected virtual void OnInvalidAuthHeader()
+        {
+        }
+
+        private static string HashPassword(string password)
+        {
+            var bytes = Encoding.UTF8.GetBytes(password);
+            var hashBytes = SHA256.Create().ComputeHash(bytes);
+            return BitConverter.ToString(hashBytes).Replace("-", "");
         }
     }
 }

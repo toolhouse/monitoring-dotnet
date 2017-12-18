@@ -9,9 +9,9 @@ namespace Toolhouse.Monitoring.Handlers
 {
     public class ReadinessEndpointHandler : AbstractHttpHandler
     {
-        public override void ProcessRequest(HttpContext context)
+        public override void ProcessRequestCore(HttpContext context)
         {
-            if (!CheckAuthentication(context))
+            if (!CheckAuthentication())
             {
                 return;
             }
