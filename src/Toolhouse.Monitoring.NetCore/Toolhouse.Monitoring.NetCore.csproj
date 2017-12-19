@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Toolhouse.Monitoring\Toolhouse.Monitoring.csproj" />
+    <ProjectReference Include="..\Toolhouse.Monitoring.Core\Toolhouse.Monitoring.Core.csproj" />
   </ItemGroup>
 
 </Project>

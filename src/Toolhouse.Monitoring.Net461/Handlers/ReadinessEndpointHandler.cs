@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 
 using Newtonsoft.Json;
+using Toolhouse.Monitoring.Core;
 
 namespace Toolhouse.Monitoring.Handlers
 {

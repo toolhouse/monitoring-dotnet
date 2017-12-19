@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolhouse.Monitoring.Net461
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolhouse.Monitoring.Tests.Net461", "tests\Toolhouse.Monitoring.Tests.Net461\Toolhouse.Monitoring.Tests.Net461.csproj", "{E410CE9B-97A0-459A-8C71-5A43000E8D57}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolhouse.Monitoring", "src\Toolhouse.Monitoring\Toolhouse.Monitoring.csproj", "{CE343BF6-986F-4494-B043-7C1D3D2F4322}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolhouse.Monitoring.Core", "src\Toolhouse.Monitoring.Core\Toolhouse.Monitoring.Core.csproj", "{CE343BF6-986F-4494-B043-7C1D3D2F4322}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolhouse.Monitoring.NetCore", "src\Toolhouse.Monitoring.NetCore\Toolhouse.Monitoring.NetCore.csproj", "{8E5F599D-000A-41D2-ADAA-F034F6736E68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolhouse.Monitoring.NetCore", "src\Toolhouse.Monitoring.NetCore\Toolhouse.Monitoring.NetCore.csproj", "{8E5F599D-000A-41D2-ADAA-F034F6736E68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

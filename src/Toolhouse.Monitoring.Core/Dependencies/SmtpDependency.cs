@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 
-namespace Toolhouse.Monitoring.Dependencies
+namespace Toolhouse.Monitoring.Core.Dependencies
 {
     public class SmtpDependency : IDependency
     {

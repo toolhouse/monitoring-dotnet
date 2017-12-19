@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Toolhouse.Monitoring
+namespace Toolhouse.Monitoring.Core
 {
     public abstract class AuthChecker
     {

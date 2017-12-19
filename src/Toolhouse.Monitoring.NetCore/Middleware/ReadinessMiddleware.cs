@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
+using Toolhouse.Monitoring.Core;
 
 namespace Toolhouse.Monitoring.NetCore.Middleware
 {
@@ -11,7 +11,6 @@ namespace Toolhouse.Monitoring.NetCore.Middleware
     {
         public ReadinessMiddleware(RequestDelegate next, string username, string passwordSha256)
         {
-            _next = next;
             _username = username;
             _passwordSha256 = passwordSha256;
         }
@@ -45,20 +44,16 @@ namespace Toolhouse.Monitoring.NetCore.Middleware
                 };
             }
 
-            var serializer = new JsonSerializer();
-            serializer.Serialize(new StreamWriter(resp.Body), output);
-
-            await _next.Invoke(context);
+            await resp.WriteAsync(JsonConvert.SerializeObject(output));
         }
 
-        private readonly RequestDelegate _next;
         private readonly string _username;
         private readonly string _passwordSha256;
     }
 
     public static class ReadinessMiddlewareExtensions
     {
-        public static IApplicationBuilder UseCustomMetrics(this IApplicationBuilder builder, string username, string passwordSha256)
+        public static IApplicationBuilder UseReadiness(this IApplicationBuilder builder, string username, string passwordSha256)
         {
             return builder.Map("/readiness", ab =>
                 ab.UseMiddleware<ReadinessMiddleware>(username, passwordSha256));

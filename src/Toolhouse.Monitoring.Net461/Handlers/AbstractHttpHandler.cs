@@ -2,6 +2,7 @@ using System;
 using System.Configuration;
 using System.Web;
 using System.Text.RegularExpressions;
+using Toolhouse.Monitoring.Core;
 
 namespace Toolhouse.Monitoring.Handlers
 {

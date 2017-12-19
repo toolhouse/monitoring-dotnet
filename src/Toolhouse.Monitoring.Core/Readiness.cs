@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Toolhouse.Monitoring.Dependencies;
+using Toolhouse.Monitoring.Core.Dependencies;
 
-namespace Toolhouse.Monitoring
+namespace Toolhouse.Monitoring.Core
 {
     /// <summary>
     /// Place to register application dependencies and determine overall system readiness.

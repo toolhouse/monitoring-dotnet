@@ -2,6 +2,7 @@ using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Web;
+using Toolhouse.Monitoring.Core;
 
 namespace Toolhouse.Monitoring.Modules
 {

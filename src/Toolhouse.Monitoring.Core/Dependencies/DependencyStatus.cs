@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Toolhouse.Monitoring.Dependencies
+namespace Toolhouse.Monitoring.Core.Dependencies
 {
     /// <summary>
     /// Structure describing the current status of an IDependency.

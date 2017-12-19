@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Toolhouse.Monitoring.Dependencies
+namespace Toolhouse.Monitoring.Core.Dependencies
 {
     public interface IDependency
     {

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Toolhouse.Monitoring.Core;
 
 namespace Toolhouse.Monitoring.Tests
 {

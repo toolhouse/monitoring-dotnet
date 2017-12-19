@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Toolhouse.Monitoring.Core;
 
 namespace Toolhouse.Monitoring.NetCore.Middleware
 {
@@ -43,7 +44,7 @@ namespace Toolhouse.Monitoring.NetCore.Middleware
 
     public static class DefaultMetricsMiddlewareExtensions
     {
-        public static IApplicationBuilder UseCustomMetrics(this IApplicationBuilder builder, string username, string passwordSha256)
+        public static IApplicationBuilder UseDefaultMetrics(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<DefaultMetricsMiddleware>();
         }

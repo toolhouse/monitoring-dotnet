@@ -79,9 +79,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Toolhouse.Monitoring\Toolhouse.Monitoring.csproj">
+    <ProjectReference Include="..\..\src\Toolhouse.Monitoring.Core\Toolhouse.Monitoring.Core.csproj">
       <Project>{ce343bf6-986f-4494-b043-7c1d3d2f4322}</Project>
-      <Name>Toolhouse.Monitoring</Name>
+      <Name>Toolhouse.Monitoring.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

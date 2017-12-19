@@ -11,18 +11,13 @@ namespace Toolhouse.Monitoring.NetCore.Middleware
     {
         public HealthMiddleware(RequestDelegate next)
         {
-            _next = next;
         }
 
         public async Task Invoke(HttpContext context)
         {
             context.Response.StatusCode = 200;
             await context.Response.WriteAsync("OK");
-
-            await _next.Invoke(context);
         }
-
-        private readonly RequestDelegate _next;
     }
 
     public static class HealthMiddlewareExtensions

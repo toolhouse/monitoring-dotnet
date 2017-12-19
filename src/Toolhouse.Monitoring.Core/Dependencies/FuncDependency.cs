@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Toolhouse.Monitoring.Dependencies
+namespace Toolhouse.Monitoring.Core.Dependencies
 {
     /// <summary>
     /// Wrapper that allows using a lambda as a dependency check.

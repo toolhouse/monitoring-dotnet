@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Toolhouse.Monitoring.Core;
 
 namespace Toolhouse.Monitoring.NetCore
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 
-namespace Toolhouse.Monitoring.Dependencies
+namespace Toolhouse.Monitoring.Core.Dependencies
 {
     /// <summary>
     /// Dependency that makes an HTTP GET request for a URL.

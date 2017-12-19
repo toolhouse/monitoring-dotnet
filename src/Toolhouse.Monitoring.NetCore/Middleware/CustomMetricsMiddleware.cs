@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Prometheus;
 using Prometheus.Advanced;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Toolhouse.Monitoring.NetCore.Middleware
@@ -13,7 +15,6 @@ namespace Toolhouse.Monitoring.NetCore.Middleware
     {
         public CustomMetricsMiddleware(RequestDelegate next, string username, string passwordSha256)
         {
-            _next = next;
             _username = username;
             _passwordSha256 = passwordSha256;
         }
@@ -37,16 +38,21 @@ namespace Toolhouse.Monitoring.NetCore.Middleware
 
             response.ContentType = ScrapeHandler.GetContentType(acceptHeaders);
 
-            ScrapeHandler.ProcessScrapeRequest(
-                DefaultCollectorRegistry.Instance.CollectAll(),
-                response.ContentType,
-                response.Body
-            );
+            string output;
 
-            await _next.Invoke(context);
+            using (var stream = new MemoryStream())
+            {
+                ScrapeHandler.ProcessScrapeRequest(
+                    DefaultCollectorRegistry.Instance.CollectAll(),
+                    response.ContentType,
+                    stream
+                );
+                output = Encoding.UTF8.GetString(stream.ToArray());
+            }
+
+            await response.WriteAsync(output);
         }
 
-        private readonly RequestDelegate _next;
         private readonly string _username;
         private readonly string _passwordSha256;
     }

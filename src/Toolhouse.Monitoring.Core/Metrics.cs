@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Toolhouse.Monitoring
+namespace Toolhouse.Monitoring.Core
 {
     /// <summary>
     /// Provides methods for working standard application metrics and creating new metrics.

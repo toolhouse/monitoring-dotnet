@@ -1,7 +1,7 @@
 using System;
 using System.Data.SqlClient;
 
-namespace Toolhouse.Monitoring.Dependencies
+namespace Toolhouse.Monitoring.Core.Dependencies
 {
     public class DatabaseDependency : IDependency
     {
