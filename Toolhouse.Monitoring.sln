@@ -3,13 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolhouse.Monitoring.Net461", "src\Toolhouse.Monitoring.Net461\Toolhouse.Monitoring.Net461.csproj", "{5BB9187C-5743-4B74-AF87-00F8FD62C968}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolhouse.Monitoring.Tests", "Toolhouse.Monitoring.Tests\Toolhouse.Monitoring.Tests.csproj", "{E410CE9B-97A0-459A-8C71-5A43000E8D57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolhouse.Monitoring.Tests.Net461", "tests\Toolhouse.Monitoring.Tests.Net461\Toolhouse.Monitoring.Tests.Net461.csproj", "{E410CE9B-97A0-459A-8C71-5A43000E8D57}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolhouse.Monitoring.Core", "src\Toolhouse.Monitoring.Core\Toolhouse.Monitoring.Core.csproj", "{CE343BF6-986F-4494-B043-7C1D3D2F4322}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolhouse.Monitoring.NetCore", "src\Toolhouse.Monitoring.NetCore\Toolhouse.Monitoring.NetCore.csproj", "{8E5F599D-000A-41D2-ADAA-F034F6736E68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolhouse.Monitoring", "Toolhouse.Monitoring\Toolhouse.Monitoring.csproj", "{CE343BF6-986F-4494-B043-7C1D3D2F4322}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5BB9187C-5743-4B74-AF87-00F8FD62C968}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BB9187C-5743-4B74-AF87-00F8FD62C968}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BB9187C-5743-4B74-AF87-00F8FD62C968}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BB9187C-5743-4B74-AF87-00F8FD62C968}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E410CE9B-97A0-459A-8C71-5A43000E8D57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E410CE9B-97A0-459A-8C71-5A43000E8D57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E410CE9B-97A0-459A-8C71-5A43000E8D57}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -29,10 +21,6 @@ Global
 		{CE343BF6-986F-4494-B043-7C1D3D2F4322}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE343BF6-986F-4494-B043-7C1D3D2F4322}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE343BF6-986F-4494-B043-7C1D3D2F4322}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8E5F599D-000A-41D2-ADAA-F034F6736E68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E5F599D-000A-41D2-ADAA-F034F6736E68}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8E5F599D-000A-41D2-ADAA-F034F6736E68}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8E5F599D-000A-41D2-ADAA-F034F6736E68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
