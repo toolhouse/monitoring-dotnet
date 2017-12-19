@@ -14,6 +14,12 @@ To add a Prometheus metrics scraping endpoint, register the HTTP handler like so
 </location>
 ```
 
+For .NET Core, add the following in `Startup.cs` or somewhere similar:
+
+```csharp
+app.UseCustomMetrics("MyAdminUsername", "MyAdminPassword");
+```
+
 To automatically generate metrics around incoming HTTP requests and application exceptions, add `Toolhouse.Monitoring.Modules.MetricsModule` to your `Web.config`:
 
 ```xml
@@ -22,6 +28,12 @@ To automatically generate metrics around incoming HTTP requests and application 
         <add name="ToolhouseMetricsModule" type="Toolhouse.Monitoring.Modules.MetricsModule, Toolhouse.Monitoring"/>
     </modules>
 </system.webServer>
+```
+
+For .NET Core, add the following in `Startup.cs` or somewhere similar:
+
+```csharp
+app.UseDefaultMetrics("MyAdminUsername", "MyAdminPassword");
 ```
 
 ## Standard Metrics

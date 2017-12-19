@@ -17,6 +17,12 @@ To wire this handler into your application at `/health`, add the following to yo
 </location>
 ```
 
+For .NET Core, add the following in `Startup.cs` or somewhere similar:
+
+```csharp
+app.UseHealthcheck();
+```
+
 You can verify it is working via `curl`:
 
 ```

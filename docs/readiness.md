@@ -44,6 +44,12 @@ To add a readiness endpoint at `/readiness`, add the following to your `Web.conf
 </location>
 ```
 
+For .NET Core, add the following in `Startup.cs` or somewhere similar:
+
+```csharp
+app.UseReadiness("MyAdminUsername", "MyAdminPassword");
+```
+
 It should work, but not return anything interesting:
 
 ```
