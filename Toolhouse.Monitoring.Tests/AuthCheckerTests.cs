@@ -1,3 +1,5 @@
+using System;
+
 using NUnit.Framework;
 
 namespace Toolhouse.Monitoring.Tests
