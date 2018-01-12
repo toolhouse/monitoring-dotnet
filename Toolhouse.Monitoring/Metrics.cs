@@ -10,6 +10,11 @@ namespace Toolhouse.Monitoring
     /// </summary>
     public static class Metrics
     {
+        // Exception used as a compatibility shim for InstrumentApiCall().
+        private class RequestFailedException : Exception
+        {
+        }
+
         /// <summary>
         /// ID of the metric used for the "current http requests" gauge.
         /// </summary>
@@ -166,7 +171,21 @@ namespace Toolhouse.Monitoring
         [Obsolete("Use Metrics.Instrument instead.")]
         public static void InstrumentApiCall(string name, Func<bool> makeRequest)
         {
-            Instrument(name, () => { makeRequest(); });
+            try
+            {
+                Instrument(name, () =>
+                {
+                    var success = makeRequest();
+                    if (!success)
+                    {
+                        throw new RequestFailedException();
+                    }
+                });
+            }
+            catch (RequestFailedException)
+            {
+                // This exception is used to force Instrument() into recording the failure
+            }
         }
 
         /// <summary>
