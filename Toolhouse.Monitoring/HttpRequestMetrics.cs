@@ -43,9 +43,22 @@ namespace Toolhouse.Monitoring
         public T PerformRequest<T>(Func<T> request)
         {
             StartGatheringMetrics();
-            T result = request();
+
+            T result;
+
+            try
+            {
+                result = request();
+            }
+            catch
+            {
+                StopGatheringMetrics();
+                RecordMetrics(false);
+                throw;
+            }
+
             StopGatheringMetrics();
-            RecordMetrics();
+            RecordMetrics(true);
             return result;
         }
 
@@ -63,8 +76,17 @@ namespace Toolhouse.Monitoring
             m_currentRequests.Labels(m_labels[m_labels.BackendLabelKey]).Dec();
         }
 
-        private void RecordMetrics()
+        private void RecordMetrics(bool success)
         {
+            if (success)
+            {
+                m_labels.AddSuccess();
+            }
+            else
+            {
+                m_labels.AddFailure();
+            }
+
             Prometheus.Metrics.CreateCounter(string.Format("{0}_responses_total", m_name), string.Empty, m_labels.Keys)
                 .Labels(m_labels.Values).Inc();
             Prometheus.Metrics.CreateHistogram(string.Format("{0}_request_duration_seconds", m_name), string.Empty, null, m_labels.Keys)

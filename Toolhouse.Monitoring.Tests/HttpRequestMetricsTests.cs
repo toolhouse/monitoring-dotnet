@@ -76,6 +76,154 @@ namespace Toolhouse.Monitoring.Tests
             TestHistogramIsCreated(name, () => { Metrics.Instrument(name, labels => true); });
         }
 
+        [Test]
+        public void TestResponsesTotalRecordsSuccessViaLabel()
+        {
+            string metricName = "test";
+            Metrics.Instrument(metricName, () => { });
+
+            DefaultCollectorRegistry registry = GetEmptyRegistry();
+            string totalMetricName = string.Format("{0}_responses_total", metricName);
+
+            Metrics.Instrument(metricName, () => { });
+
+            var family = registry.CollectAll().First(x => x.name == totalMetricName);
+            var metric = family.metric[0];
+            var label = metric.label.Find(l => l.name == "success");
+
+            Assert.IsNotNull(label, "success label not found");
+            Assert.AreEqual("1", label.value);
+        }
+
+        [Test]
+        public void TestResponsesTotalRecordsFailureViaLabel()
+        {
+            string metricName = "test";
+            DefaultCollectorRegistry registry = GetEmptyRegistry();
+            string totalMetricName = string.Format("{0}_responses_total", metricName);
+
+            try
+            {
+                Metrics.Instrument(metricName, () =>
+                {
+                    throw new ApplicationException("Simulate error during request");
+                });
+                Assert.Fail("Metrics.Instrument should not swallow exceptions");
+            }
+            catch (ApplicationException)
+            {
+            }
+
+            var family = registry.CollectAll().First(x => x.name == totalMetricName);
+            var metric = family.metric[0];
+            var label = metric.label.Find(l => l.name == "success");
+
+            Assert.IsNotNull(label, "success label not found");
+            Assert.AreEqual("0", label.value);
+        }
+
+        [Test]
+        public void TestRequestDurationRecordsSuccessViaLabel()
+        {
+            string metricName = "test";
+            string durationMetricName = string.Format("{0}_request_duration_seconds", metricName);
+            DefaultCollectorRegistry registry = GetEmptyRegistry();
+
+            Metrics.Instrument(metricName, () => { });
+
+            var family = registry.CollectAll().First(x => x.name == durationMetricName);
+            var metric = family.metric[1];
+            var label = metric.label.Find(l => l.name == "success");
+
+            Assert.IsNotNull(label, "success label not found");
+            Assert.AreEqual("1", label.value);
+        }
+
+        [Test]
+        public void TestRequestDurationRecordsFailureViaLabel()
+        {
+            string metricName = "test";
+            string durationMetricName = string.Format("{0}_request_duration_seconds", metricName);
+            DefaultCollectorRegistry registry = GetEmptyRegistry();
+
+            try
+            {
+
+                Metrics.Instrument(metricName, () => { throw new ApplicationException("Simulate error during request"); });
+                Assert.Fail("Metrics.Instrument should not swallow exceptions");
+            }
+            catch (ApplicationException)
+            {
+            }
+
+            var family = registry.CollectAll().First(x => x.name == durationMetricName);
+            var metric = family.metric[1];
+            var label = metric.label.Find(l => l.name == "success");
+
+            Assert.IsNotNull(label, "success label not found");
+            Assert.AreEqual("0", label.value);
+        }
+
+        [Test]
+        public void TestExceptionIsRethrown()
+        {
+            try
+            {
+                Metrics.Instrument("exception_rethrown", () =>
+                {
+                    throw new ApplicationException("Simulate exception during request");
+                });
+            }
+            catch (ApplicationException)
+            {
+                return;
+            }
+
+            Assert.Fail("Metrics.Instrument should not swallow exceptions");
+        }
+
+        [Test]
+        public void TestRequestCounterIsDecrementedOnException()
+        {
+            const string name = "request_counter_dec_on_exception";
+            DefaultCollectorRegistry registry = GetEmptyRegistry();
+
+            try
+            {
+                Metrics.Instrument(name, () =>
+                {
+                    throw new ApplicationException("Simulate exception during request.");
+                });
+            }
+            catch (ApplicationException)
+            {
+                var family = registry.CollectAll().First(x => x.name == string.Format("{0}_current_requests", name));
+                Assert.AreEqual(0, family.metric[0].gauge.value);
+                return;
+            }
+
+            Assert.Fail("Metrics.Instrument should not swallow exceptions");
+        }
+
+        [Test]
+        public void TestHistogramCreatedWhenExceptionThrown()
+        {
+            string name = "exception_thrown";
+            try
+            {
+                TestHistogramIsCreated(name, () =>
+                {
+                    throw new ApplicationException("Simulate exception during request");
+                });
+            }
+            catch (ApplicationException)
+            {
+                return;
+            }
+            Assert.Fail("Metrics.Instrument should not swallow exceptions");
+        }
+
+
         private void TestHistogramIsCreated(string name, Action instrument)
         {
             DefaultCollectorRegistry registry = GetEmptyRegistry();
