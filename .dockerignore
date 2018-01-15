@@ -1,0 +1,10 @@
+/packages
+/testrunner
+
+bin
+obj
+
+.travis.yml
+build.cmd
+package.cmd
+README.md
