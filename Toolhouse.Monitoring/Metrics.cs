@@ -1,6 +1,7 @@
 using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Toolhouse.Monitoring
 {
@@ -9,6 +10,11 @@ namespace Toolhouse.Monitoring
     /// </summary>
     public static class Metrics
     {
+        // Exception used as a compatibility shim for InstrumentApiCall().
+        private class RequestFailedException : Exception
+        {
+        }
+
         /// <summary>
         /// ID of the metric used for the "current http requests" gauge.
         /// </summary>
@@ -161,71 +167,107 @@ namespace Toolhouse.Monitoring
         /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
         /// </summary>
         /// <param name="name">Descriptive name of thing being done. Should be a singular noun, e.g. "salesforce".</param>
-        /// <param name="callback">Code to run. Should return true for success, false for failure.</param>
+        /// <param name="makeRequest">Code to run. Should return true for success, false for failure.</param>
+        [Obsolete("Use Metrics.Instrument instead.")]
         public static void InstrumentApiCall(string name, Func<bool> makeRequest)
         {
-            // TODO: Refactor into a class.
-            var requestsCounter = Prometheus.Metrics.CreateCounter(
-                string.Format("{0}_requests_total", name),
-                "",
-                labelNames: new string[] { "backend" }
-            );
-            var responsesCounter = Prometheus.Metrics.CreateCounter(
-                string.Format("{0}_responses_total", name),
-                "",
-                labelNames: new string[] { "backend", "success" }
-            );
-            var currentRequestsGauge = Prometheus.Metrics.CreateGauge(
-                string.Format("{0}_current_requests", name),
-                "",
-                labelNames: new string[] { "backend" }
-            );
-            var durationHistogram = Prometheus.Metrics.CreateHistogram(
-                string.Format("{0}_request_duration_seconds", name),
-                "",
-                null,
-                labelNames: new string []
-                {
-                    "success",
-                    "backend",
-                }
-            );
-
-            bool success = false;
-            var stopwatch = new Stopwatch();
-            var backend = GetBackend();
-
-            Action logMetrics = () =>
-            {
-                stopwatch.Stop();
-
-                currentRequestsGauge.Labels(backend).Dec();
-                responsesCounter.Labels(
-                    backend,
-                    success ? "1" : "0"
-                ).Inc();
-                durationHistogram.Labels(
-                    success ? "1" : "0",
-                    backend
-                ).Observe(stopwatch.Elapsed.TotalSeconds);
-            };
-
-            stopwatch.Start();
-            requestsCounter.Labels(backend).Inc();
-            currentRequestsGauge.Labels(backend).Inc();
-
             try
             {
-                success = makeRequest();
+                Instrument(name, () =>
+                {
+                    var success = makeRequest();
+                    if (!success)
+                    {
+                        throw new RequestFailedException();
+                    }
+                });
             }
-            catch (Exception)
+            catch (RequestFailedException)
             {
-                success = false;
-                logMetrics();
-                throw;
+                // This exception is used to force Instrument() into recording the failure
+            }
+        }
+
+        /// <summary>
+        /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
+        /// </summary>
+        /// <param name="name">Descriptive name of thing being done. Should be a singular noun, e.g. "salesforce".</param>
+        /// <param name="request">An action which will perform the request</param>
+        public static void Instrument(string name, Action request)
+        {
+            InstrumentWithMetrics(name, requestMetrics =>
+            {
+                requestMetrics.PerformRequest(request);
+            });
+        }
+
+        /// <summary>
+        /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
+        /// </summary>
+        /// <param name="name">Descriptive name of thing being done. Should be a singular noun, e.g. "salesforce".</param>
+        /// <param name="request">An action which will perform the request</param>
+        /// <remarks>A mutable Labels instance will be provided to the request.</remarks>
+        public static void Instrument(string name, Action<Labels> request)
+        {
+            InstrumentWithMetrics(name, requestMetrics =>
+            {
+                requestMetrics.PerformRequest(() =>
+                {
+                    request(requestMetrics.Labels);
+                });
+            });
+        }
+
+        /// <summary>
+        /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
+        /// </summary>
+        /// <param name="name">Descriptive name of thing being done. Should be a singular noun, e.g. "salesforce".</param>
+        /// <param name="request">An action which will perform the request</param>
+        /// <returns>The return value of the request.</returns>
+        public static T Instrument<T>(string name, Func<T> request)
+        {
+            return InstrumentWithMetrics(name, requestMetrics =>
+            {
+                return requestMetrics.PerformRequest(request);
+            });
+        }
+
+        /// <summary>
+        /// Instruments a block of code that makes a request to an external API (e.g. via REST / SOAP).
+        /// </summary>
+        /// <param name="name">Descriptive name of thing being done. Should be a singular noun, e.g. "salesforce".</param>
+        /// <param name="request">An action which will perform the request</param>
+        /// <remarks>A mutable Labels instance will be provided to the request.</remarks>
+        /// <returns>The return value of the request.</returns>
+        public static T Instrument<T>(string name, Func<Labels, T> request)
+        {
+            return InstrumentWithMetrics(name, requestMetrics =>
+            {
+                return requestMetrics.PerformRequest(() =>
+                {
+                    return request(requestMetrics.Labels);
+                });
+            });
+        }
+
+        private static void InstrumentWithMetrics(string name, Action<HttpRequestMetrics> instrumentWithMetrics)
+        {
+            InstrumentWithMetrics(name, requestMetrics =>
+            {
+                instrumentWithMetrics(requestMetrics);
+                return true;
+            });
+        }
+
+        private static T InstrumentWithMetrics<T>(string name, Func<HttpRequestMetrics, T> instrumentWithMetrics)
+        {
+            if (name.Any(char.IsWhiteSpace))
+            {
+                throw new ArgumentException("Parameter must be a single word.", "name");
             }
 
-            logMetrics();
+            HttpRequestMetrics requestMetrics = new HttpRequestMetrics(name);
+            return instrumentWithMetrics(requestMetrics);
         }
 
         private static Prometheus.Gauge.Child CreateCurrentHttpRequestsGauge()
