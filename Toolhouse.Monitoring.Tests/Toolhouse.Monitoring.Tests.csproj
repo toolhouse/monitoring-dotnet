@@ -37,7 +37,6 @@
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework, Version=3.6.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.6.0\lib\net45\nunit.framework.dll</HintPath>
@@ -71,14 +70,14 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="AbstractHandlerTest.cs" />
     <Compile Include="HttpRequestMetricsTests.cs" />
     <Compile Include="LabelsTests.cs" />
+    <Compile Include="AuthCheckerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toolhouse.Monitoring\Toolhouse.Monitoring.csproj">
-      <Project>{5bb9187c-5743-4b74-af87-00f8fd62c968}</Project>
+      <Project>{ce343bf6-986f-4494-b043-7c1d3d2f4322}</Project>
       <Name>Toolhouse.Monitoring</Name>
     </ProjectReference>
   </ItemGroup>

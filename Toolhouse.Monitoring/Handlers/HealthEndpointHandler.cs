@@ -1,4 +1,4 @@
-using System;
+#if !NETCORE
 using System.Web;
 
 namespace Toolhouse.Monitoring.Handlers
@@ -21,3 +21,4 @@ namespace Toolhouse.Monitoring.Handlers
         }
     }
 }
+#endif

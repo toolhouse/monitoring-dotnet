@@ -2,12 +2,10 @@ using System;
 
 using NUnit.Framework;
 
-using Toolhouse.Monitoring.Handlers;
-
 namespace Toolhouse.Monitoring.Tests
 {
     [TestFixture]
-    public class AbstractHandlerTest
+    public class AuthCheckerTests
     {
         [Test]
         public void TestBasicAuthSucceedsWithValidUserAndPassword()
@@ -17,7 +15,7 @@ namespace Toolhouse.Monitoring.Tests
             var hashedPassword = "fcde2b2edba56bf408601fb721fe9b5c338d10ee429ea04fae5511b68fbf8fb9";
 
             Assert.IsTrue(
-                AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword)
+                AuthChecker.CheckAuthHeader(header, username, hashedPassword)
             );
         }
 
@@ -29,7 +27,7 @@ namespace Toolhouse.Monitoring.Tests
             var hashedPassword = "";
 
             Assert.IsTrue(
-                AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword)
+                AuthChecker.CheckAuthHeader(header, username, hashedPassword)
             );
         }
 
@@ -40,7 +38,7 @@ namespace Toolhouse.Monitoring.Tests
             var username = "";
             var hashedPassword = "";
             Assert.IsTrue(
-                AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword)
+                AuthChecker.CheckAuthHeader(header, username, hashedPassword)
             );
         }
 
@@ -52,7 +50,7 @@ namespace Toolhouse.Monitoring.Tests
             var hashedPassword = "fcde2b2edba56bf408601fb721fe9b5c338d10ee429ea04fae5511b68fbf8fb9";
 
             Assert.IsFalse(
-                AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword)
+                AuthChecker.CheckAuthHeader(header, username, hashedPassword)
             );
         }
 
@@ -63,7 +61,7 @@ namespace Toolhouse.Monitoring.Tests
             var username = "foo";
             var hashedPassword = "fcde2b2edba56bf408601fb721fe9b5c338d10ee429ea04fae5511b68fbf8fb9";
 
-            Assert.IsFalse(AbstractHttpHandler.CheckAuthHeader(header, username, hashedPassword));
+            Assert.IsFalse(AuthChecker.CheckAuthHeader(header, username, hashedPassword));
         }
     }
 }

@@ -1,17 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
+#if !NETCORE
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Web;
 
 namespace Toolhouse.Monitoring.Handlers
 {
     public class ReadinessEndpointHandler : AbstractHttpHandler
     {
-        public override void ProcessRequest(HttpContext context)
+        public override void ProcessRequestCore(HttpContext context)
         {
-            if (!CheckAuthentication(context))
+            if (!CheckAuthentication())
             {
                 return;
             }
@@ -44,3 +42,4 @@ namespace Toolhouse.Monitoring.Handlers
         }
     }
 }
+#endif
